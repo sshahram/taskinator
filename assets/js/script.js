@@ -17,9 +17,11 @@ var taskFormHandler = function(event) {
         alert("You need to fill out the task form!");
         return false;
     };
-
+    
+    // reset form fields for next task to be entered
     formEl.reset();
 
+    // check if task is new or one being edited by seeing if it has a data-task-id attribute
     var isEdit = formEl.hasAttribute("data-task-id");
 
     // has data attribute, so get task id and call function to complete edit process
@@ -72,6 +74,7 @@ var createTaskEl = function(taskDataObj) {
 };
 
 var createTaskActions = function(taskId) {
+    // create container to hold elements
     var actionContainerEl = document.createElement("div");
     actionContainerEl.className = "task-actions";
 
@@ -80,7 +83,6 @@ var createTaskActions = function(taskId) {
     editButtonEl.textContent = "Edit";
     editButtonEl.className = "btn edit-btn";
     editButtonEl.setAttribute("data-task-id", taskId);
-
     actionContainerEl.appendChild(editButtonEl);
 
     // create delete button
@@ -88,16 +90,16 @@ var createTaskActions = function(taskId) {
     deleteButtonEl.textContent = "Delete";
     deleteButtonEl.className = "btn delete-btn";
     deleteButtonEl.setAttribute("data-task-id", taskId);
-
     actionContainerEl.appendChild(deleteButtonEl);
 
+    // create change status dropdown
     var statusSelectEl = document.createElement("select");
     statusSelectEl.className = "select-status";
     statusSelectEl.setAttribute("name", "status-change");
     statusSelectEl.setAttribute("data-task-id", taskId);
-
     actionContainerEl.appendChild(statusSelectEl);
 
+    // create status options
     var statusChoices = ["To Do", "In Progress", "Completed"];
     for (var i =0; i < statusChoices.length; i++) {
         // create option element
@@ -112,7 +114,7 @@ var createTaskActions = function(taskId) {
     return actionContainerEl;
 };
 
-formEl.addEventListener("submit", taskFormHandler);
+
 
 var taskButtonHandler = function(event) {
     // get target element from event
@@ -165,7 +167,9 @@ var completeEditTask = function (taskName, taskType, taskId) {
 
     alert("Task Updated!");
 
+    // remove data attribute from form
     formEl.removeAttribute("data-task-id");
+    // update formEl button to go back to saying "Add Task" instead of "Edit Task"
     document.querySelector("#save-task").textContent ="Add Task";
 };
 
@@ -191,5 +195,11 @@ var taskStatusChangeHandler = function(event) {
 
 };
 
+// Create a new task
+formEl.addEventListener("submit", taskFormHandler);
+
+// for edit and delete buttons
 pageContentEl.addEventListener("click", taskButtonHandler);
+
+// for changing the status
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
